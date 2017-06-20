@@ -6,9 +6,11 @@ const Queue = (props) => (
   <ul>
     <div>
       <div className="name">{props.restaurant.name}</div>
-      <img src={props.restaurant.image_url} height="120" width="150"></img>
+      <div>{props.restaurant.display_phone}</div>
+      <div>{props.restaurant.location.display_address}</div>
+      <img src={props.restaurant.image_url} height="160" width="240"></img>
     </div>
-    {props.queue.map((customer, index) => <QueueEntry key={index} customer={customer}/>)}
+    {props.queue.map((customer, index) => <QueueEntry key={index} customer={customer} isLoggedIn={props.isLoggedIn} handleSeatedOrRemove={props.handleSeatedOrRemove}/>)}
     <div id="info">
       <span>Please enter your information:</span>
       <form className="form-inline">

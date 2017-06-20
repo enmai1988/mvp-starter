@@ -1,14 +1,20 @@
 const session = require('express-session');
 const request = require('request');
 const qs = require('querystring');
+const Promise = require('bluebird');
 const db = require('../database-mongo/index.js');
-
-const cookieParser = (req, res, next) => {
-
-};
+const util = require('./util.js');
 
 const sessionManager = (req, res, next) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
   console.log(req.cookie);
+  if (!req.cookie) {
+    res.cookie('BuYongDeng', 'asdjalsdajhdhaklsdj');
+    res.send();
+  }
+
 };
 
 const findItOnYelp = (req, res, term) => {
@@ -37,6 +43,5 @@ const findItOnYelp = (req, res, term) => {
 
 module.exports = {
   findItOnYelp: findItOnYelp,
-  sessionManager: sessionManager,
-  cookieParser: cookieParser
+  sessionManager: sessionManager
 }

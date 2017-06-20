@@ -18,18 +18,18 @@ let customerSchema = new Schema({
   firstname: String
 });
 
-let ownerSchema = new Schema({
-  id: { type: Number, unique: true },
-  username: String,
+let registeredUserSchema = new Schema({
+  username: {type: String, unique: true},
   password: String,
-  salt: String
+  salt: String,
+  restaurant_owner: {type: Boolean, default: false}
 });
 
 let Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
 let Customer =  mongoose.model('Customer', customerSchema);
 
-let Owner = mongoose.model('Owner', ownerSchema);
+let User = mongoose.model('Owner', registeredUserSchema);
 
 // Restaurant.collection.drop();
 // Customer.collection.drop();
@@ -37,5 +37,5 @@ let Owner = mongoose.model('Owner', ownerSchema);
 module.exports = {
   Restaurant: Restaurant,
   Customer: Customer,
-  Owner: Owner
+  User: User
 };

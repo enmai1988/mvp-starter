@@ -13,7 +13,7 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 
 // handles get request
 app.get('/list', (req, res) => {
-  db.Restaurant.find().sort('-rating').then(result => {
+  db.Restaurant.find().limit(25).sort('-rating').then(result => {
     res.send(result);
   });
 });
@@ -36,9 +36,28 @@ app.post('/queue', (req, res) => {
   });
 });
 
+app.post('/dequeue', (req, res) => {
+  console.log(req.body._id);
+  db.Customer.findOneAndRemove({firstname: req.body.firstname, lastname: req.body.lastname, restaurant_name: req.body.restaurant_name})
+  .then(result => {
+    console.log('removed: ', result);
+  })
+  .then(() => {
+    return db.Customer.find({restaurant_name: req.body.restaurant_name});
+  })
+  .then(result => {
+    res.send(result);
+  });
+});
+
 //handles post request
 app.post('/restaurants/imports', (req, res) => {
   middleware.findItOnYelp(req, res, req.body.query);
+});
+
+app.get('/owner', (req, res) => {
+  res.cookie('owner', 'true');
+  res.redirect('/');
 });
 
 // authenticate before the following will execute
@@ -46,10 +65,9 @@ app.use(cookieParser());
 app.use(middleware.sessionManager);
 
 // require login
-app.get('/owner', (req, res) => {
+app.post('/login', (req, res) => {
   // if not login, serve the login page
-  // if not login, serve the signup page
-  console.log('right here');
+  // if login, serve the index page
 });
 
 

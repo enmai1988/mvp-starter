@@ -14,7 +14,7 @@ class App extends React.Component {
     this.state = {
       list: [],
       selection: null,
-      login: false,
+      isLoggedIn: false,
       enqueue: false,
       queue: []
     };
@@ -80,7 +80,7 @@ class App extends React.Component {
 
   handleChange(e) {
     e.preventDefault();
-    
+
     let keyword = e.target.value.toLowerCase();
     let result = this.state.list.filter(restaurant => {
       return restaurant.name.toLowerCase().includes(keyword);
@@ -115,8 +115,48 @@ class App extends React.Component {
     });
   }
 
-  handleLogin() {
-    // send a post request to server to login to the owner page
+  handleLogin(e) {
+    e.preventDefault();
+
+    this.setState({
+      isLoggedIn: !this.state.isLoggedIn
+      // selection: this.state.list[0]
+    });
+    //
+    // let regUser = {
+    //   username: document.getElementById('username').value,
+    //   password: document.getElementById('password').value
+    // };
+    // console.log(regUser);
+    //
+    // $.ajax({
+    //   url: 'http://127.0.0.1:3000/login',
+    //   type: 'POST',
+    //   data: regUser,
+    //   success: (response) => {
+    //     console.log(response);
+    //   },
+    //   error: () => {
+    //     console.log('login failed');
+    //   }
+    // });
+  }
+
+  handleSeatedOrRemove(e, customer) {
+    // e.preventDefault();
+    customer.restaurant_name = this.state.selection.name;
+    $.ajax({
+      url: 'http://127.0.0.1:3000/dequeue',
+      type: 'POST',
+      data: customer,
+      success: (response) => {
+        console.log('record removed');
+        this.setState({ queue: response });
+      },
+      error: () => {
+        console.log('Error removing record');
+      }
+    });
   }
 
   render() {
@@ -125,9 +165,12 @@ class App extends React.Component {
         <div className="clearfix">
           <Search handleSearch={this.handleSearch.bind(this)} handleChange={this.handleChange.bind(this)}/>
         </div>
-        {/* <div><Login handleLogin={this.handleLogin.bind(this)}/></div> */}
+        <div>{this.state.isLoggedIn ? <div></div> : <Login handleLogin={this.handleLogin.bind(this)}/>}</div>
         <div className="list_container">
-          {this.state.enqueue ? <Queue queue={this.state.queue} restaurant={this.state.selection} handleWait={this.handleWait.bind(this)}/> : <List list={this.state.list} handleQueue={this.handleQueue.bind(this)}/>}
+          {this.state.enqueue ?
+            <Queue handleSeatedOrRemove={this.handleSeatedOrRemove.bind(this)} isLoggedIn={this.state.isLoggedIn} queue={this.state.queue} restaurant={this.state.selection} handleWait={this.handleWait.bind(this)}/> :
+            <List list={this.state.list} handleQueue={this.handleQueue.bind(this)}/>
+          }
         </div>
       </div>
     );
