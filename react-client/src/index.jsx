@@ -79,12 +79,13 @@ class App extends React.Component {
   }
 
   handleChange(e) {
+    // e.preventDefault();
     let keyword = e.target.value.toLowerCase();
     let result = this.state.list.filter(restaurant => {
       return restaurant.name.toLowerCase().includes(keyword);
     });
 
-    if (!this.history[keyword]) {
+    if (!this.history[keyword] || this.history[keyword].length < 1) {
       this.history[keyword] = result;
     }
 
@@ -92,18 +93,19 @@ class App extends React.Component {
     this.setState({ list: this.history[keyword] });
   }
 
-  handleSearch() {
-    // should send a post request to find matching resturants
+  handleSearch(e) {
+    e.preventDefault();
+
     let query = document.getElementById('search').value;
     console.log(`sending ${query} to server`);
+    
     $.ajax({
       url: 'http://127.0.0.1:3000/restaurants/imports',
-      method: 'POST',
+      type: 'POST',
       data: {query: query},
-      dataType: 'json',
       success: (data) => {
         console.log('post: ', data);
-        this.setStat({ list: JSON.parse(data) });
+        this.setState({ list: data });
       },
       error: (data) => {
         console.log('search: ', data);
@@ -119,11 +121,11 @@ class App extends React.Component {
   render() {
     return (
       <div className=".col-md-8">
-        <div>
+        <div className="clearfix">
           <Search handleSearch={this.handleSearch.bind(this)} handleChange={this.handleChange.bind(this)}/>
         </div>
         {/* <div><Login handleLogin={this.handleLogin.bind(this)}/></div> */}
-        <div>
+        <div className="list_container">
           {this.state.enqueue ? <Queue queue={this.state.queue} restaurant={this.state.selection} handleWait={this.handleWait.bind(this)}/> : <List list={this.state.list} handleQueue={this.handleQueue.bind(this)}/>}
         </div>
       </div>

@@ -1,8 +1,6 @@
 const session = require('express-session');
-const cookie = require('cookie-parser');
 const request = require('request-promise');
 const qs = require('querystring');
-const bodyParser = require('body-parser');
 const db = require('../database-mongo/index.js');
 
 const cookieParser = (req, res, next) => {
@@ -10,7 +8,7 @@ const cookieParser = (req, res, next) => {
 };
 
 const sessionManager = (req, res, next) => {
-
+  console.log(req.cookie);
 };
 
 const findItOnYelp = (req, res, term) => {
@@ -30,17 +28,11 @@ const findItOnYelp = (req, res, term) => {
 
   request(options).then(response => {
     let restaurants = JSON.parse(response).businesses;
+    console.log(restaurants[0]);
     return db.Restaurant.create(restaurants);
   }).then(result => {
-    res.send(JSON.stringify(result));
+    res.send(result);
   });
-  // request(options, (err, response, body) => {
-  //   let restaurants = JSON.parse(body).businesses;
-  //   db.Restaurant.create(restaurants)
-  //   .then(() => {
-  //     res.send(body);
-  //   });
-  // });
 };
 
 module.exports = {

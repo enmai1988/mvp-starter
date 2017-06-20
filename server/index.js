@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const middleware = require('./middleware.js');
+const cookieParser = require('cookie-parser');
 const db = require('../database-mongo/index.js');
+const request = require('request-promise');
 const qs = require('querystring');
 const app = express();
 
@@ -35,19 +37,19 @@ app.post('/queue', (req, res) => {
 });
 
 // authenticate before the following will execute
-// app.use(auth.sessionManager);
+app.use(cookieParser());
+app.use(middleware.sessionManager);
 
 // require login
 app.get('/owner', (req, res) => {
   // if not login, serve the login page
   // if not login, serve the signup page
-
+  console.log('right here');
 });
 
 //handles post request
 app.post('/restaurants/imports', (req, res) => {
-  let term = req.body.query;
-  middleware.findItOnYelp(req, res, term);
+  middleware.findItOnYelp(req, res, req.body.query);
 });
 
 

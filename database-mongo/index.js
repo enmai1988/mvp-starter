@@ -8,6 +8,7 @@ let restaurantSchema = new Schema({
   name: String,
   image_url: String,
   display_phone: String,
+  'location.display_address': String,
   rating: Number
 });
 
@@ -29,6 +30,9 @@ let Restaurant = mongoose.model('Restaurant', restaurantSchema);
 let Customer =  mongoose.model('Customer', customerSchema);
 
 let Owner = mongoose.model('Owner', ownerSchema);
+
+// Restaurant.collection.drop();
+// Customer.collection.drop();
 
 module.exports = {
   Restaurant: Restaurant,
