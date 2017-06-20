@@ -1,31 +1,39 @@
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost/myApp');
+const Schema = mongoose.Schema;
 
-var db = mongoose.connection;
-
-db.on('error', function() {
-  console.log('mongoose connection error');
+let restaurantSchema = new Schema({
+  id: { type: String, unique: true },
+  name: String,
+  image_url: String,
+  location: String,
+  display_phone: String,
+  rating: Number
 });
 
-db.once('open', function() {
-  console.log('mongoose connected successfully');
+let customerSchema = new Schema({
+  id: { type: Number, unique: true },
+  lastname: String,
+  firstname: String,
+  phone: String
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+let ownerSchema = new Schema({
+  id: { type: Number, unique: true },
+  username: String,
+  password: String,
+  salt: String
 });
 
-var Item = mongoose.model('Item', itemSchema);
+let Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
-var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
-    if(err) {
-      callback(err, null);
-    } else {
-      callback(null, items);
-    }
-  });
+let Customer =  mongoose.model('Customer', customerSchema);
+
+let Owner = mongoose.model('Owner', ownerSchema);
+
+module.exports = {
+  Restaurant: Restaurant,
+  Customer: Customer,
+  Owner: Owner
 };
-
-module.exports.selectAll = selectAll;
