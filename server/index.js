@@ -36,6 +36,11 @@ app.post('/queue', (req, res) => {
   });
 });
 
+//handles post request
+app.post('/restaurants/imports', (req, res) => {
+  middleware.findItOnYelp(req, res, req.body.query);
+});
+
 // authenticate before the following will execute
 app.use(cookieParser());
 app.use(middleware.sessionManager);
@@ -47,10 +52,6 @@ app.get('/owner', (req, res) => {
   console.log('right here');
 });
 
-//handles post request
-app.post('/restaurants/imports', (req, res) => {
-  middleware.findItOnYelp(req, res, req.body.query);
-});
 
 
 const port = 3000;

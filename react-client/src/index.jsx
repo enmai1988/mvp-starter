@@ -79,7 +79,8 @@ class App extends React.Component {
   }
 
   handleChange(e) {
-    // e.preventDefault();
+    e.preventDefault();
+    
     let keyword = e.target.value.toLowerCase();
     let result = this.state.list.filter(restaurant => {
       return restaurant.name.toLowerCase().includes(keyword);
@@ -98,7 +99,7 @@ class App extends React.Component {
 
     let query = document.getElementById('search').value;
     console.log(`sending ${query} to server`);
-    
+
     $.ajax({
       url: 'http://127.0.0.1:3000/restaurants/imports',
       type: 'POST',

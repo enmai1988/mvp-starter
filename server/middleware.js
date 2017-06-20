@@ -1,5 +1,5 @@
 const session = require('express-session');
-const request = require('request-promise');
+const request = require('request');
 const qs = require('querystring');
 const db = require('../database-mongo/index.js');
 
@@ -26,12 +26,12 @@ const findItOnYelp = (req, res, term) => {
     }
   };
 
-  request(options).then(response => {
-    let restaurants = JSON.parse(response).businesses;
-    console.log(restaurants[0]);
-    return db.Restaurant.create(restaurants);
-  }).then(result => {
-    res.send(result);
+  request(options, (err, response, body) => {
+    let restaurants = JSON.parse(body).businesses;
+    db.Restaurant.create(restaurants, (err, result) => {
+      if (err) { console.error(err); }
+      res.send(restaurants);
+    });
   });
 };
 

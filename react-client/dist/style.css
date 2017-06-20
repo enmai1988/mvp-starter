@@ -1,13 +1,19 @@
-.queue-entry {
-  list-style-type: decimal;
+.list-entry {
+  margin-top: 10px;
+  list-style-type: none;
 }
 
-.list-entry {
-  list-style-type: none;
+.name {
+  font-weight: bold;
 }
 
 .list_container {
   margin-top: 10px;
+}
+
+.queue_entry {
+  margin-top: 5px;
+  list-style-type: decimal;
 }
 
 #search {
@@ -20,4 +26,12 @@
 #search_btn {
   float: left;
   margin-top: 10px;
+}
+
+#list_entry_btn {
+  margin-left: 10px;
+}
+
+#info {
+  margin-top: 20px;
 }
