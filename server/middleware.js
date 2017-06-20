@@ -1,6 +1,9 @@
 const session = require('express-session');
 const cookie = require('cookie-parser');
-var qs = require('querystring');
+const request = require('request-promise');
+const qs = require('querystring');
+const bodyParser = require('body-parser');
+const db = require('../database-mongo/index.js');
 
 const cookieParser = (req, res, next) => {
 
@@ -10,12 +13,13 @@ const sessionManager = (req, res, next) => {
 
 };
 
-const findItOnYelp = (req, res) => {
+const findItOnYelp = (req, res, term) => {
   let query = {
-    term: 'restaurants',
+    term: term,
     latitude: 37.7749,
     longitude: -122.4194,
-    sort_by: 'best_match'
+    sort_by: 'best_match',
+    categories: 'restaurants'
   };
   let options = {
     url: `https://api.yelp.com/v3/businesses/search?${qs.stringify(query)}`,
@@ -24,9 +28,19 @@ const findItOnYelp = (req, res) => {
     }
   };
 
-  request(options, (err, response, body) => {
-    res.send(body);
+  request(options).then(response => {
+    let restaurants = JSON.parse(response).businesses;
+    return db.Restaurant.create(restaurants);
+  }).then(result => {
+    res.send(JSON.stringify(result));
   });
+  // request(options, (err, response, body) => {
+  //   let restaurants = JSON.parse(body).businesses;
+  //   db.Restaurant.create(restaurants)
+  //   .then(() => {
+  //     res.send(body);
+  //   });
+  // });
 };
 
 module.exports = {

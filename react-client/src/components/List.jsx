@@ -4,7 +4,7 @@ import ListEntry from './listentry.jsx';
 
 const List = (props) => (
   <ul className="list">
-    {props.list.map((restaurant, index) => <ListEntry restaurant={restaurant} key={index}/>)}
+    {props.list.map((restaurant, index) => <ListEntry restaurant={restaurant} key={index} handleQueue={props.handleQueue}/>)}
   </ul>
 );
 

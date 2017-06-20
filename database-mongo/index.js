@@ -7,16 +7,14 @@ let restaurantSchema = new Schema({
   id: { type: String, unique: true },
   name: String,
   image_url: String,
-  location: String,
   display_phone: String,
   rating: Number
 });
 
 let customerSchema = new Schema({
-  id: { type: Number, unique: true },
+  restaurant_name: { type: String },
   lastname: String,
-  firstname: String,
-  phone: String
+  firstname: String
 });
 
 let ownerSchema = new Schema({
